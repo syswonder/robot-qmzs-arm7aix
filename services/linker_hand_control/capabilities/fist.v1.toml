@@ -1,0 +1,14 @@
+# 把灵巧手握拳（O6 左手官方 “握拳” preset）。
+# O6 运动较慢，下发后大约 10–15 秒才能完全到位。
+[contract]
+id          = "robonix/service/linker_hand_control/fist"
+version     = "1"
+kind        = "service"
+idl         = "linker_hand_control/srv/Fist.srv"
+description = "把灵巧手握拳（LinkerHand O6 左手官方握拳预设）。调用后手会缓慢闭合，约 10–15 秒到位；手指周围不要放东西。"
+
+[mode]
+type = "rpc"
+
+[semantics]
+user_invocable = true

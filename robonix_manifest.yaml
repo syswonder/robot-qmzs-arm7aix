@@ -1,0 +1,204 @@
+manifestVersion: 1
+name: robonix-qmzs-arm7aix
+
+# 目录（https://packages.robonix.ai）展示用的元数据。
+# 六个字段全部必填；maintainers 必须写成 "Name <email@domain>"，否则 CI 校验失败。
+catalog:
+  name: robonix.robot.qmzs.arm7aix
+  version: 0.1.0
+  description: >-
+    qmzs ARM7AIX 七轴机械臂（Damiao 电机 + U2CAN 串口）+ LinkerHand O6 灵巧手 +
+    Orbbec Gemini 336L RGB-D 相机的整机部署：关节/TCP 运动、灵巧手姿态、VLM 辅助抓取放置。
+  license: MulanPSL-2.0
+  tags: [robot, arm, manipulator, arm7aix, qmzs, damiao, u2can, linkerhand, o6, orbbec, grasp]
+  maintainers:
+    - Joker.Yun <2353493891@qq.com>
+
+env:
+  ROS_DOMAIN_ID: "0"
+  RMW_IMPLEMENTATION: rmw_zenoh_cpp
+  # 各包 start.sh 默认解释器在通用环境里不存在，这里统一指向部署根目录的 .venv。
+  # ${PWD} 由 rbnx 从启动目录展开：请在本仓库根目录执行 `rbnx boot`（./start.sh 已保证）。
+  # VLM_* 由 .env 提供（不入库），见 .env.example。
+  RBNX_PYTHON: "${PWD}/.venv/bin/python"
+  RBNX_CODEGEN_PYTHON: "${PWD}/.venv/bin/python"
+  LINKERHAND_O6_PYTHON: "${PWD}/.venv/bin/python"
+  HAND_GESTURE_PYTHON: "${PWD}/.venv/bin/python"
+
+# rbnx boot 只启动这里声明的内置服务：
+#   - atlas / executor / pilot / liaison 是 `rbnx chat` / `rbnx ask` 的必需项
+#     （chat → liaison → pilot，ask → pilot）。VLM 凭据从 .env 注入，见 start.sh。
+#   - soma 提供本体描述（soma.yaml）。
+system:
+  atlas:
+    listen: 127.0.0.1:50051
+    log: info
+  executor:
+    listen: 127.0.0.1:50061
+    log: info
+  soma:
+    listen: 127.0.0.1:50091
+    robot_yaml: soma.yaml
+    log: info
+  pilot:
+    listen: 127.0.0.1:50071
+    log: info
+    vlm:
+      upstream: ${VLM_BASE_URL}
+      api_key: ${VLM_API_KEY}
+      model: ${VLM_MODEL}
+      api_format: openai
+  liaison:
+    listen: 127.0.0.1:50081
+    log: info
+
+# ── 原语（primitive）────────────────────────────────────────────────
+# 都来自已收录的社区仓库（url + branch），本仓库不复制它们的代码。
+primitive:
+  - name: robot_description
+    url: https://github.com/syswonder/primitive-robot-description-rbnx
+    branch: main
+    manifest: package_manifest.native.yaml
+
+  # 七轴臂原语：ROS 2 话题提供 joint_states / end_pose / joint_command /
+  # pos_command / joint_enable / joint_disable，包内自带 arm7aix SDK 与 URDF。
+  - name: arm7aix_controller
+    url: https://github.com/syswonder/primitive-qmzs-arm7aix-rbnx
+    branch: main
+    config:
+      # 不覆盖 sdk_config：原语包自带 config/arm7aix.yaml（串口 /dev/ttyACM0、
+      # kinematics.urdf 指向包内 models/），且配置优先从包根解析，部署侧同名文件会被
+      # 静默忽略。现场若要改串口/电机 ID，用唯一文件名覆盖，例如：
+      #   sdk_config: config/arm7aix.deploy.yaml
+      state_topic: /arm7aix/joint_states
+      end_pose_topic: /arm7aix/end_pose
+      joint_command_topic: /arm7aix/joint_command
+      pos_command_topic: /arm7aix/pos_command
+      joint_enable_topic: /arm7aix/joint_enable
+      joint_disable_topic: /arm7aix/joint_disable
+      joint_command_speed_rad_s: 0.5
+      pos_command_linear_speed_m_s: 0.15
+      state_period_sec: 0.05
+      feedback_timeout_sec: 2.0
+      pose_frame: base_link
+
+  # LinkerHand O6 灵巧手（六轴五指，SocketCAN 直连，无 ROS 后端）。
+  # 启动前把接口拉起来：
+  #   sudo ip link set can2 type can bitrate 1000000 && sudo ip link set can2 up
+  # 只允许一个 CAN 写者：先关掉厂商 GUI / LinkerHand ROS SDK。
+  - name: o6_hand
+    url: https://github.com/syswonder/primitive-linkerbot-linker_hand_o6-hand-rbnx
+    branch: main
+    config:
+      # right → 仲裁 ID 0x27；left → 0x28。填错手会不应答。
+      hand_type: left
+      can_iface: can2
+      baudrate: 1000000
+
+  # Orbbec Gemini 336L RGB-D 相机原语（qmzs_grasp 的 snapshot / detect_object 取 RGB）。
+  # 分辨率必须与 handeye-calibration 的标定分辨率一致，否则像素坐标对不上单应矩阵。
+  # 同一时刻只能有一个进程占用相机；标定网页在跑时不要同时 boot 本部署。
+  # 首次 `./build.sh` 会克隆并 colcon 编译 vendored OrbbecSDK_ROS2，耗时较长（一次即可）。
+  - name: orbbec_camera
+    url: https://github.com/syswonder/primitive-orbbec-camera-rbnx
+    branch: main
+    config:
+      camera_name: camera
+      # Gemini 336L 属于 330 系列；Dabai DCW 用 dabai_dcw.launch.py。
+      launch_file: gemini_330_series.launch.py
+      depth_registration: true
+      enable_d2c_viewer: false
+      color_width: 640
+      color_height: 480
+      color_fps: 15
+      color_format: MJPG
+      depth_width: 640
+      depth_height: 480
+      depth_fps: 15
+      sentinel_timeout_s: 60
+
+# ── 服务（service）──────────────────────────────────────────────────
+# 两个服务随本仓库发布（path 依赖，目录页归为“部署仓库内依赖”）：
+#   arm7aix_control    把机械臂原语的话题接口包装成 MCP 工具
+#                      move_joint / move_pose / enable_joints / disable_joints / get_state
+#   linker_hand_control 把 o6_hand 的 hand/move_joint 包装成 fist / open 预设
+# 硬件、限位、轨迹规划和故障保护仍在原语里。
+service:
+  - name: arm7aix_control
+    path: ./services/arm7aix_control
+    config:
+      # true = 工具只记录、不发布（无硬件联调）；现场首次联调建议先 true。
+      dry_run: false
+      joint_names: [joint1, joint2, joint3, joint4, joint5, joint6, joint7]
+      feedback_stale_sec: 1.0
+      # move_joint / move_pose 发布后等待反馈到位的上限；0 = 立即返回不等待。
+      motion_timeout_sec: 30.0
+      joint_tolerance_rad: 0.02
+      pose_position_tolerance_m: 0.005
+      pose_angle_tolerance_rad: 0.03
+
+  - name: linker_hand_control
+    path: ./services/linker_hand_control
+    config: {}
+
+# ── 技能（skill）────────────────────────────────────────────────────
+skill:
+  # 灵巧手手势技能：MCP 工具 gesture_dance（“跳个舞/动动手指 N 秒”）。
+  # 纯消费者，通过 atlas 发现 o6_hand 的契约，不直接打开 CAN 总线。
+  - name: hand_gesture
+    url: https://github.com/syswonder/skill-hand-gesture-rbnx
+    branch: main
+    config: {}
+
+  # ARM7AIX 七轴 + LinkerHand O6 抓取技能：
+  # 高层 grab / pick / release / place / home；底层 pixel_to_pose / move_to_pixel /
+  # detect_object / move_to_object / calibration_status / snapshot。
+  # 固定 tag 而不是 main，保证整机可复现（换版本时改这里）。
+  - name: qmzs_grasp
+    url: https://github.com/syswonder/skill-qmzs-grasp-rbnx
+    branch: v0.1.3
+    config:
+      arm_provider_id: arm7aix_controller
+      camera_provider_id: orbbec_camera
+      hand_provider_id: o6_hand
+      # 手眼标定产物不入库（config/handeye/ 已在 .gitignore）。
+      # 用 handeye-calibration 导出 calibration.json / grasp_orientation.json 后拷入；
+      # 未标定时 pixel_to_pose / pick 会报错，detect_object 仍可用。
+      calibration_path: config/handeye/calibration.json
+      orientation_path: config/handeye/grasp_orientation.json
+      # orientation_path 没有有效值时使用下面的目标（z 米 + 四元数 xyzw，base_link）。
+      default_z_m: 0.110
+      default_quaternion_xyzw: [-0.39929801572830265, -0.7452551369053023, 0.10514658698768016, 0.5235456721209157]
+      # 首次联调：true = 只算不发，核对 XY / Z / 四元数与标注图后改成 false 才会运动。
+      dry_run: true
+      feedback_timeout_s: 2.0
+      motion_timeout_s: 30.0
+      position_tolerance_m: 0.005
+      angle_tolerance_rad: 0.03
+      # 单次最大位移（米）；0 = 不检查。现场确认后建议设 0.4~0.6。
+      max_travel_m: 0.0
+      # 两级接近：先到目标正上方 hover，再竖直下降，避免侧向扫到物体。
+      approach_height_m: 0.10
+      hand_open_settle_s: 1.0
+      hand_close_settle_s: 3.0
+      joint_names: [joint1, joint2, joint3, joint4, joint5, joint6, joint7]
+      joint_tolerance_rad: 0.02
+      # 固定抓取/放置位姿 [x, y, z] 米（base_link）；留空时 grab 报错、place 原地放。
+      grasp_pose: []
+      place_pose: []
+      # 复位关节目标（rad）；留空时 Robonix 自动解析为零点位姿（初始状态）作为 home 目标。
+      home_joints: []
+      # base_link 工作空间边界，留空不限制；示例：
+      # workspace: {x_min: -0.7, x_max: 0.7, y_min: -0.7, y_max: 0.7, z_min: 0.02, z_max: 0.85}
+      workspace: {}
+      # 默认 false：忽略工具调用里的 z/quaternion 参数，只认 orientation_path 与默认值。
+      allow_tool_overrides: false
+      # VLM 开放词汇检测（detect_object / move_to_object）。留空时回退环境变量
+      # VLM_BASE_URL / VLM_API_KEY / VLM_MODEL（由 .env 提供）。
+      vlm_base_url: ""
+      vlm_api_key: ""
+      vlm_model: ""
+      vlm_timeout_s: 60.0
+      # 抓取点：有向框中心(0) → 底部中点(1) 的插值；有倾角建议 0.3~0.7。
+      vlm_contact_ratio: 0.5
+      vlm_save_annotated: true

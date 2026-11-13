@@ -1,0 +1,12 @@
+# Joint-space target for all seven axes (radians).
+# Order and names come from the deployment config joint_names.
+float64[7] positions
+---
+bool accepted
+# true = all joints are within joint_tolerance_rad of the target.
+bool reached
+# true = motion_timeout_sec elapsed without reaching the target.
+bool timed_out
+float64 elapsed_sec
+float64[7] final_positions
+string detail

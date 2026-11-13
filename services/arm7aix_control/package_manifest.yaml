@@ -1,0 +1,40 @@
+manifestVersion: 1
+
+# ARM7AIX 机械臂控制服务：把 arm7aix_controller 原语的 ROS 2 话题接口
+# 包装成 Pilot / `rbnx chat` 可调用的 MCP 工具（move_joint / move_pose /
+# enable_joints / disable_joints / get_state）。
+#
+# 本包只做「动作编排 -> ROS 2 话题消息」的转换与反馈缓存，硬件、限位、
+# 规划、使能安全检查仍由 arm7aix_controller 原语负责。
+
+package:
+  name: robonix.service.arm7aix.control
+  version: 0.1.0
+  description: "ARM7AIX arm MCP control service: joint/cartesian targets, enable/disable, feedback query."
+  tags:
+    - service
+    - arm
+    - arm7aix
+    - mcp
+  maintainers:
+    - "Joker.Yun <2353493891@qq.com>"
+  license: MulanPSL-2.0
+
+build: bash scripts/build.sh
+start: bash scripts/start.sh
+
+# 本包自己的 MCP 契约（capabilities/*.v1.toml + capabilities/lib/arm7aix_control/srv/）。
+# 生命周期 Driver 由框架自动提供（service 无需显式声明）。
+capabilities:
+  - name: robonix/service/arm7aix_control/move_joint
+    path: capabilities/move_joint.v1.toml
+  - name: robonix/service/arm7aix_control/move_pose
+    path: capabilities/move_pose.v1.toml
+  - name: robonix/service/arm7aix_control/enable_joints
+    path: capabilities/enable_joints.v1.toml
+  - name: robonix/service/arm7aix_control/disable_joints
+    path: capabilities/disable_joints.v1.toml
+  - name: robonix/service/arm7aix_control/get_state
+    path: capabilities/get_state.v1.toml
+
+depends: []

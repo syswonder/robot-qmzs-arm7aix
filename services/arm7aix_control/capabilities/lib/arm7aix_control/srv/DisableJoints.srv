@@ -1,0 +1,4 @@
+# No request fields: stop motion and disable all seven drives.
+---
+bool accepted
+string detail

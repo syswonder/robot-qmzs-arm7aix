@@ -1,0 +1,33 @@
+# ── Python 环境 ─────────────────────────────────────────────────────
+.venv/
+.venv*/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# ── 本机私有配置（VLM 凭据等），不要提交 ────────────────────────────
+.env
+.vlmkey
+.vlmkey.*
+
+# ── Robonix 运行/构建产物 ───────────────────────────────────────────
+rbnx-boot/
+.run/
+logs/
+*.log
+services/*/logs/
+services/*/rbnx-build/
+services/*/build/
+services/*/install/
+
+# ── 现场手眼标定产物：每台机器自己生成，不入库 ──────────────────────
+config/handeye/*.json
+config/handeye/*.npy
+config/handeye/*.yaml
+
+# ── 编辑器与系统文件 ────────────────────────────────────────────────
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+.dsh-code-index/

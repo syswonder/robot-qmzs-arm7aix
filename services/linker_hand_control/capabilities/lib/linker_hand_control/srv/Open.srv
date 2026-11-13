@@ -1,0 +1,4 @@
+# 空请求：执行“张开”预设（O6 左手官方 preset raw [255,179,255,255,255,255]）。
+---
+bool ok
+string message

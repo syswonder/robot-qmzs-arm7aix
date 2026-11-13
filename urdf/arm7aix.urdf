@@ -1,0 +1,257 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="URDF">
+  <link name="base_link">
+    <!-- sw2robot density="1000" inertia="solidworks" -->
+    <visual>
+      <origin xyz="0.000000000000 0.000000000000 0.000000000000" rpy="1.570796326795 0.000000000000 0.211045196010" />
+      <geometry>
+        <mesh filename="meshes/J1_1.stl" />
+      </geometry>
+      <material name="J1_1_material">
+        <color rgba="0.749 0.749 0.749 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.000000000000 0.000000000000 0.000000000000" rpy="1.570796326795 0.000000000000 0.211045196010" />
+      <geometry>
+        <mesh filename="meshes/J1_1.stl" />
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0.000000000005 0.000299380486 0.031532172420" rpy="1.570796326795 0.000000000000 0.211045196010" />
+      <mass value="0.31319" />
+      <inertia ixx="0.000244261" ixy="-5.39601e-07" ixz="8.75452e-07" iyy="0.000297781" iyz="2.51873e-06" izz="0.00024816" />
+    </inertial>
+  </link>
+  <link name="link1">
+    <!-- sw2robot density="1000" inertia="solidworks" -->
+    <visual>
+      <origin xyz="0.000000000000 0.000000000000 0.000000000000" rpy="1.570796326795 0.000000000000 1.781841522804" />
+      <geometry>
+        <mesh filename="meshes/J2_1.stl" />
+      </geometry>
+      <material name="J2_1_material">
+        <color rgba="0.749 0.749 0.749 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.000000000000 0.000000000000 0.000000000000" rpy="1.570796326795 0.000000000000 1.781841522804" />
+      <geometry>
+        <mesh filename="meshes/J2_1.stl" />
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="-0.000289242697 0.002723742960 0.037998585020" rpy="1.570796326795 0.000000000000 1.781841522804" />
+      <mass value="0.387739" />
+      <inertia ixx="0.000407342" ixy="7.05549e-06" ixz="-1.29273e-05" iyy="0.00036881" iyz="3.56759e-06" izz="0.000410595" />
+    </inertial>
+  </link>
+  <link name="link2">
+    <!-- sw2robot density="1000" inertia="solidworks" -->
+    <visual>
+      <origin xyz="0.000000000000 0.000000000000 0.041000071682" rpy="3.141592653590 1.359751130785 1.570796325750" />
+      <geometry>
+        <mesh filename="meshes/J3_1.stl" />
+      </geometry>
+      <material name="J3_1_material">
+        <color rgba="0.749 0.749 0.749 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.000000000000 0.000000000000 0.041000071682" rpy="3.141592653590 1.359751130785 1.570796325750" />
+      <geometry>
+        <mesh filename="meshes/J3_1.stl" />
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0.071305949290 0.000000090303 -0.000550569290" rpy="3.141592653590 1.359751130785 1.570796325750" />
+      <mass value="0.214989" />
+      <inertia ixx="0.000302682" ixy="-8.36644e-06" ixz="2.55449e-05" iyy="0.00016589" iyz="-1.79225e-06" izz="0.000366641" />
+    </inertial>
+  </link>
+  <link name="link3">
+    <!-- sw2robot density="1000" inertia="solidworks" -->
+    <visual>
+      <origin xyz="0.000000000000 0.000000000000 0.000000000000" rpy="1.570796326795 0.000000000000 1.781841522804" />
+      <geometry>
+        <mesh filename="meshes/J4_1.stl" />
+      </geometry>
+      <material name="J4_1_material">
+        <color rgba="0.749 0.749 0.749 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.000000000000 0.000000000000 0.000000000000" rpy="1.570796326795 0.000000000000 1.781841522804" />
+      <geometry>
+        <mesh filename="meshes/J4_1.stl" />
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="-0.000046354756 -0.023960592680 0.141354051700" rpy="1.570796326795 0.000000000000 1.781841522804" />
+      <mass value="0.253032" />
+      <inertia ixx="0.00086864" ixy="-0.000197368" ixz="2.9233e-05" iyy="0.000186467" iyz="-4.23337e-05" izz="0.00088421" />
+    </inertial>
+  </link>
+  <link name="link4">
+    <!-- sw2robot density="1000" inertia="solidworks" -->
+    <visual>
+      <origin xyz="0.000000000000 0.000000000000 -0.028346903248" rpy="3.141592653590 -0.211045196010 1.570796325750" />
+      <geometry>
+        <mesh filename="meshes/J5_1.stl" />
+      </geometry>
+      <material name="J5_1_material">
+        <color rgba="0.749 0.749 0.749 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.000000000000 0.000000000000 -0.028346903248" rpy="3.141592653590 -0.211045196010 1.570796325750" />
+      <geometry>
+        <mesh filename="meshes/J5_1.stl" />
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0.055046632456 0.034180353716 0.000166858329" rpy="3.141592653590 -0.211045196010 1.570796325750" />
+      <mass value="0.217881" />
+      <inertia ixx="0.000258983" ixy="4.27962e-05" ixz="1.84504e-05" iyy="0.000170294" iyz="1.56072e-05" izz="0.000244756" />
+    </inertial>
+  </link>
+  <link name="link5">
+    <!-- sw2robot density="1000" inertia="solidworks" -->
+    <visual>
+      <origin xyz="0.000000000000 0.000000000000 0.000000000000" rpy="1.570796326795 0.000000000000 1.781841522805" />
+      <geometry>
+        <mesh filename="meshes/J6_1.stl" />
+      </geometry>
+      <material name="J6_1_material">
+        <color rgba="0.749 0.749 0.749 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.000000000000 0.000000000000 0.000000000000" rpy="1.570796326795 0.000000000000 1.781841522805" />
+      <geometry>
+        <mesh filename="meshes/J6_1.stl" />
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0.000003136586 -0.000830532064 0.088609821840" rpy="1.570796326795 0.000000000000 1.781841522805" />
+      <mass value="0.19713" />
+      <inertia ixx="0.000316167" ixy="-3.38165e-06" ixz="-6.62343e-06" iyy="7.75476e-05" iyz="-5.43201e-07" izz="0.000312668" />
+    </inertial>
+  </link>
+  <link name="link6">
+    <!-- sw2robot density="1000" inertia="solidworks" -->
+    <visual>
+      <origin xyz="0.000000000000 0.000000000000 0.025000098595" rpy="3.141592653590 1.359751130785 1.570796325750" />
+      <geometry>
+        <mesh filename="meshes/J7_1.stl" />
+      </geometry>
+      <material name="J7_1_material">
+        <color rgba="0.749 0.749 0.749 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.000000000000 0.000000000000 0.025000098595" rpy="3.141592653590 1.359751130785 1.570796325750" />
+      <geometry>
+        <mesh filename="meshes/J7_1.stl" />
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0.049346930757 -0.002389713217 0.001517169473" rpy="3.141592653590 1.359751130785 1.570796325750" />
+      <mass value="0.193944" />
+      <inertia ixx="0.000106125" ixy="5.15623e-06" ixz="-1.62809e-05" iyy="0.000186158" iyz="2.19269e-06" izz="0.000185379" />
+    </inertial>
+  </link>
+  <link name="link7">
+    <!-- sw2robot density="1000" inertia="solidworks" -->
+    <visual>
+      <origin xyz="0.000000000000 0.000000000000 0.022844969096" rpy="-3.141592653590 -0.211045196010 1.570796325749" />
+      <geometry>
+        <mesh filename="meshes/c_1.stl" />
+      </geometry>
+      <material name="c_1_material">
+        <color rgba="0.749 0.749 0.749 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.000000000000 0.000000000000 0.022844969096" rpy="-3.141592653590 -0.211045196010 1.570796325749" />
+      <geometry>
+        <mesh filename="meshes/c_1.stl" />
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0.031195636080 0.000000056199 -0.000643035099" rpy="-3.141592653590 -0.211045196010 1.570796325749" />
+      <mass value="0.0758709" />
+      <inertia ixx="7.05477e-05" ixy="1.46482e-05" ixz="-1.14946e-06" iyy="8.1216e-05" iyz="2.49164e-06" izz="7.56656e-05" />
+    </inertial>
+  </link>
+  <!-- Tool frame at the center of link7's upper flange plane. -->
+  <link name="tool0" />
+  <joint name="tool0_fixed" type="fixed">
+    <origin xyz="0.064219154418 0.000000000000 0.000000000000" rpy="1.570796326795 0.000000000000 1.570796326795" />
+    <parent link="link7" />
+    <child link="tool0" />
+  </joint>
+  <joint name="joint1" type="revolute">
+    <origin xyz="0.000000000000 0.000000000000 0.065000000000" rpy="0.000000000000 0.000000000000 -1.570796326794" />
+    <parent link="base_link" />
+    <child link="link1" />
+    <axis xyz="0 0 1" />
+    <limit lower="-2.443460952792" upper="2.443460952792" effort="10" velocity="3.14" />
+    <!-- mates: COINCIDENT, CONCENTRIC, WIDTH, COINCIDENT, CONCENTRIC, WIDTH -->
+    <!-- sw2robot-note: geo: fully constrained; config sets revolute (inference said fixed) -->
+  </joint>
+  <joint name="joint2" type="revolute">
+    <origin xyz="0.000000000123 0.000000071680 0.046750000000" rpy="1.570796326794 -1.570796325750 0.000000000000" />
+    <parent link="link1" />
+    <child link="link2" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.396263401595" upper="1.396263401595" effort="10" velocity="3.14" />
+    <!-- mates: COINCIDENT, CONCENTRIC, WIDTH, COINCIDENT, CONCENTRIC, WIDTH -->
+    <!-- sw2robot-note: geo: fully constrained; config sets revolute (inference said fixed) -->
+  </joint>
+  <joint name="joint3" type="revolute">
+    <origin xyz="0.117750000000 0.000000000000 0.000000071680" rpy="-1.570796326795 0.000000000000 -1.570796327840" />
+    <parent link="link2" />
+    <child link="link3" />
+    <axis xyz="0 0 1" />
+    <limit lower="-2.879793265791" upper="2.879793265791" effort="10" velocity="3.14" />
+    <!-- mates: CONCENTRIC, COINCIDENT, WIDTH, CONCENTRIC, COINCIDENT, WIDTH -->
+    <!-- sw2robot-note: geo: fully constrained; config sets revolute (inference said fixed) -->
+  </joint>
+  <joint name="joint4" type="revolute">
+    <origin xyz="-0.001776903130 -0.037999999922 0.174750000030" rpy="0.000000000000 -1.570796325750 0.000000000000" />
+    <parent link="link3" />
+    <child link="link4" />
+    <axis xyz="0 0 1" />
+    <limit lower="-2.967059728390" upper="0.900000000000" effort="10" velocity="3.14" />
+    <!-- mates: CONCENTRIC, COINCIDENT, PARALLEL, CONCENTRIC, COINCIDENT, PARALLEL -->
+    <!-- sw2robot-note: geo: fully constrained; config sets revolute (inference said fixed) -->
+  </joint>
+  <joint name="joint5" type="revolute">
+    <origin xyz="0.097350000040 0.037999999813 -0.000346903135" rpy="0.000000001045 1.570796326795 0.000000000000" />
+    <parent link="link4" />
+    <child link="link5" />
+    <axis xyz="0 0 1" />
+    <limit lower="-2.879793265791" upper="2.879793265791" effort="10" velocity="3.14" />
+    <!-- mates: CONCENTRIC, COINCIDENT, WIDTH, CONCENTRIC, COINCIDENT, WIDTH -->
+    <!-- sw2robot-note: geo: fully constrained; config sets revolute (inference said fixed) -->
+  </joint>
+  <joint name="joint6" type="revolute">
+    <origin xyz="0.000000000074 0.000000098598 0.111750000000" rpy="1.570796326795 -1.570796325750 0.000000000000" />
+    <parent link="link5" />
+    <child link="link6" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.570796326795" upper="1.570796326795" effort="10" velocity="3.14" />
+    <!-- mates: CONCENTRIC, COINCIDENT, PARALLEL, CONCENTRIC, COINCIDENT, PARALLEL -->
+    <!-- sw2robot-note: geo: fully constrained; config sets revolute (inference said fixed) -->
+  </joint>
+  <joint name="joint7" type="revolute">
+    <origin xyz="0.061999999999 -0.000344969088 0.000000098665" rpy="-1.570796326795 0.000000001045 -0.000000001044" />
+    <parent link="link6" />
+    <child link="link7" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.308996938996" upper="1.308996938996" effort="10" velocity="3.14" />
+    <!-- mates: CONCENTRIC, COINCIDENT, PARALLEL, CONCENTRIC, COINCIDENT, PARALLEL -->
+    <!-- sw2robot-note: geo: fully constrained; config sets revolute (inference said fixed) -->
+  </joint>
+</robot>

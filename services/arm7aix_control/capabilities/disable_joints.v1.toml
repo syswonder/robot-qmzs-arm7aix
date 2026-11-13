@@ -1,0 +1,14 @@
+# Cancel active/pending motion and disable all seven drives: holding torque is
+# removed and the arm may fall. This is NOT a hardware emergency stop.
+[contract]
+id          = "robonix/service/arm7aix_control/disable_joints"
+version     = "1"
+kind        = "service"
+idl         = "arm7aix_control/srv/DisableJoints.srv"
+description = "Stop motion and disable all seven drives; holding torque is removed and the arm may fall. Not a hardware emergency stop — ensure mechanical support first."
+
+[mode]
+type = "rpc"
+
+[semantics]
+user_invocable = true

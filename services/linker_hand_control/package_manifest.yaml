@@ -1,0 +1,33 @@
+manifestVersion: 1
+
+# 灵巧手姿态服务：把 o6_hand 原语的 hand/move_joint gRPC 契约包装成
+# Pilot / `rbnx chat` 可调用的 MCP 工具（fist / open）。
+#
+# 硬件（CAN 总线、电机协议、限位）仍由 o6_hand 原语负责；本包只做
+# 「预设姿态 -> move_joint 归一化目标」的转换。
+
+package:
+  name: robonix.service.linker_hand_control
+  version: 0.1.0
+  description: "LinkerHand O6 MCP pose service: fist and open presets through the o6_hand primitive."
+  tags:
+    - service
+    - hand
+    - dexterous
+    - linkerhand
+    - o6
+    - mcp
+  maintainers:
+    - "Joker.Yun <2353493891@qq.com>"
+  license: MulanPSL-2.0
+
+build: bash scripts/build.sh
+start: bash scripts/start.sh
+
+capabilities:
+  - name: robonix/service/linker_hand_control/fist
+    path: capabilities/fist.v1.toml
+  - name: robonix/service/linker_hand_control/open
+    path: capabilities/open.v1.toml
+
+depends: []

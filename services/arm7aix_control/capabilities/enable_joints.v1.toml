@@ -1,0 +1,15 @@
+# Enable all seven drives in POS_VEL at their measured positions without
+# creating a motion target. Motion commands will also auto-enable the arm;
+# use this when the operator wants to explicitly prepare the arm.
+[contract]
+id          = "robonix/service/arm7aix_control/enable_joints"
+version     = "1"
+kind        = "service"
+idl         = "arm7aix_control/srv/EnableJoints.srv"
+description = "Enable all seven ARM7AIX drives in POS_VEL at the measured positions (no motion target). Safe preparation step before issuing motion."
+
+[mode]
+type = "rpc"
+
+[semantics]
+user_invocable = true

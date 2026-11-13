@@ -1,0 +1,16 @@
+# Move all seven ARM7AIX joints to target positions (radians, POS_VEL mode).
+# The primitive plans a trajectory bounded by its configured joint limits and
+# speed/acceleration/jerk limits; the call returns after the target is
+# accepted for publication, not after motion completes.
+[contract]
+id          = "robonix/service/arm7aix_control/move_joint"
+version     = "1"
+kind        = "service"
+idl         = "arm7aix_control/srv/MoveJoint.srv"
+description = "Move the seven joints to target positions in radians. Returns immediately; poll get_state for progress. The arm primitive may silently reject an unreachable or limit-violating target (see its log)."
+
+[mode]
+type = "rpc"
+
+[semantics]
+user_invocable = true

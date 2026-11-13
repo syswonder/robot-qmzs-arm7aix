@@ -1,0 +1,95 @@
+# 本体描述（soma）：固定基座 ARM7AIX 七轴臂 + LinkerHand O6 灵巧手 + Orbbec Gemini 336L。
+#
+# urdf/ 是本仓库唯一的完整 URDF 与网格资源；原语包内另有一份用于 IK 的
+# models/urdf_description.urdf，两处不一致时以原语包内的运动学为准（升级 URDF 时一起改）。
+#
+# 部件关系：arm（manipulator, base_link）下挂 hand（end_effector, tool0）；
+# camera 是固定安装的独立部件，直接挂在 base_link 上。
+# URDF 里没有手/相机的 link 与 joint（只有 base_link、link1..link7、tool0），
+# 所以 hand 挂 tool0、camera 挂 base_link，仅用于目录页展示本体构成。
+
+urdf:
+  path: ./urdf/arm7aix.urdf
+  root_link: base_link
+  model_name: arm7aix
+
+robot:
+  id: arm7aix_01
+  display_name: "ARM7AIX"
+  family: manipulator
+  root_part: arm
+  components:
+    - id: arm
+      type: manipulator
+      urdf_link: base_link
+      urdf_joint: joint1
+      exports:
+        - provider_id: arm7aix_controller
+          capabilities:
+            - path: robonix/primitive/arm/joint_states
+              description: Read seven-axis position, velocity, and torque feedback.
+            - path: robonix/primitive/arm/end_pose
+              description: Read tool pose in the base_link frame.
+            - path: robonix/primitive/arm/joint_command
+              description: Move to a seven-joint position target in radians at up to 0.5 rad/s.
+            - path: robonix/primitive/arm/pos_command
+              description: Move the tool to one base_link pose target at up to 0.15 m/s.
+            - path: robonix/primitive/arm/joint_enable
+              description: Enable all seven arm joints in POS_VEL at measured positions without starting motion.
+            - path: robonix/primitive/arm/joint_disable
+              description: Cancel arm motion and disable all joints; motor holding torque is removed.
+      components:
+        - id: hand
+          type: end_effector
+          urdf_link: tool0
+          # O6 是六轴灵巧手（不是单开合夹爪），因此不声明 state 块、
+          # 不产生 open/holding 快照；手部状态通过 hand/get_state 读取。
+          exports:
+            - provider_id: o6_hand
+              capabilities:
+                - path: robonix/primitive/hand/info
+                  description: Hand control-axis layout (six axes, left hand).
+                - path: robonix/primitive/hand/move_joint
+                  description: Command hand axes by name with normalized targets.
+                - path: robonix/primitive/hand/set_joint_speed_limits
+                  description: Per-axis speed ceilings.
+                - path: robonix/primitive/hand/set_joint_torque_limits
+                  description: Per-axis torque ceilings.
+                - path: robonix/primitive/hand/get_state
+                  description: Per-axis position stream (normalized).
+    - id: camera
+      type: rgbd_camera
+      # 固定安装的 Orbbec Gemini 336L；抓取技能用 2D 手眼单应把 RGB 像素映射到 base_link XY。
+      urdf_link: base_link
+      exports:
+        - provider_id: orbbec_camera
+          capabilities:
+            - path: robonix/primitive/camera/rgb
+              description: Color image stream (640x480@15 MJPG, same as calibration resolution).
+            - path: robonix/primitive/camera/depth
+              description: Depth image aligned to color.
+            - path: robonix/primitive/camera/camera_info
+              description: Color stream intrinsics.
+
+description:
+  summary: >-
+    固定基座 ARM7AIX 七轴机械臂（Damiao 电机，U2CAN 串口 /dev/ttyACM0），末端装 LinkerHand O6
+    左手灵巧手（SocketCAN，can2 1 Mbps），配一台固定安装的 Orbbec Gemini 336L RGB-D 相机；
+    通过 arm7aix_control / linker_hand_control 两个 MCP 服务和 qmzs_grasp 抓取技能对外提供能力。
+  can_do:
+    - report measured joint states
+    - report measured end-effector pose
+    - move to seven-joint position targets in POS_VEL mode
+    - move the end effector to Cartesian pose targets in POS_VEL mode
+    - enable all seven joint drives in POS_VEL
+    - stop motion and disable all seven joint drives
+    - six-axis dexterous hand control (per-axis position / speed / torque)
+    - hand fist and open presets through the MCP control service
+    - camera-driven pick and place of a named object (VLM detection + 2D hand-eye homography)
+  cannot_do:
+    - mobile navigation
+    - operate without a fixed base
+    - execute MIT torque commands through Robonix
+    - independent distal finger joints (each distal joint follows its proximal one mechanically)
+    - grasp objects off the calibrated table plane (pick Z is a configured height)
+    - hand open/close aggregation in Soma snapshots (multi-axis hand; read hand/get_state instead)

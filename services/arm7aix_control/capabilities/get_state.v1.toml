@@ -1,0 +1,15 @@
+# Read-only feedback: cached joint positions/velocities/efforts and the tool
+# pose published by the arm primitive. Use it to check whether a motion
+# command has finished.
+[contract]
+id          = "robonix/service/arm7aix_control/get_state"
+version     = "1"
+kind        = "service"
+idl         = "arm7aix_control/srv/GetState.srv"
+description = "Read the latest seven-axis joint feedback and tool pose (base_link frame), plus feedback age. Returns valid=false when no fresh feedback has been received."
+
+[mode]
+type = "rpc"
+
+[semantics]
+user_invocable = true

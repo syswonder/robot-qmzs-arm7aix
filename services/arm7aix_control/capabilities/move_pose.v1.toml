@@ -1,0 +1,14 @@
+# Move the tool to one Cartesian pose target in the base_link frame
+# (POS_VEL mode, MoveP planning inside the arm primitive).
+[contract]
+id          = "robonix/service/arm7aix_control/move_pose"
+version     = "1"
+kind        = "service"
+idl         = "arm7aix_control/srv/MovePose.srv"
+description = "Move the arm tool to a Cartesian pose (position in metres, quaternion xyzw) in the base_link frame. Returns immediately; poll get_state for progress."
+
+[mode]
+type = "rpc"
+
+[semantics]
+user_invocable = true

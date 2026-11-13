@@ -1,0 +1,4 @@
+# No request fields: enable all seven drives at their measured positions.
+---
+bool accepted
+string detail
